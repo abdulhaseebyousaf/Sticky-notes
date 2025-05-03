@@ -4,7 +4,6 @@ post-it-app/
 ├── script.js
 ├── README.md
 
-
 ## index.html
 <!DOCTYPE html>
 <html lang="en">
@@ -40,9 +39,6 @@ function saveNote(id, content, top, left) {
 
 function createBox(id, content = '', top = '60px', left = '50px') {
     const box = document.createElement('div');
-    const isMobile = window.innerWidth <= 640;
-    box.draggable = !isMobile;
-    box.style.position = isMobile ? 'static' : 'absolute';
     box.id = id;
     box.style.top = top;
     box.style.left = left;
@@ -134,7 +130,7 @@ fullBody.addEventListener('drop', (e) => {
 This is a simple sticky notes application built with plain JavaScript and TailwindCSS. Notes are draggable (on desktop), editable, and persist using localStorage.
 
 ##  Deployment
-Deployed on Vercel (or deploy using the "Import GitHub repo" button at https://vercel.com).
+Deployed on Vercel (or deploy using the "Import GitHub repo" button at https:\\sticky-notes-ten-puce.vercel.app).
 
 ## Features
 - Add sticky notes
@@ -145,6 +141,6 @@ Deployed on Vercel (or deploy using the "Import GitHub repo" button at https://v
 ##  Run Locally
 1. Clone the repo
 ```bash
-https://github.com/YOUR_USERNAME/post-it-app.git
+https://github.com/abdulhaseebyousaf/Sticky-notes.git
 cd post-it-app
 

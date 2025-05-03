@@ -12,9 +12,6 @@ function saveNote(id, content, top, left) {
 // Create box
 function createBox(id, content = '', top = '60px', left = '50px') {
     const box = document.createElement('div');
-    const isMobile = window.innerWidth <= 640;
-    box.draggable = !isMobile;
-    box.style.position = isMobile ? 'static' : 'absolute';
     box.id = id;
     box.draggable = true;
     box.style.position = 'absolute';
