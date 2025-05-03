@@ -5,6 +5,8 @@ post-it-app/
 ├── README.md
 
 ## index.html
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +27,7 @@ post-it-app/
     <script src="script.js"></script>
 </body>
 </html>
+```
 
 ## script.js
 const addBoxBtn = document.getElementById('addBtn');
@@ -142,5 +145,5 @@ Deployed on Vercel (or deploy using the "Import GitHub repo" button at https:\\s
 1. Clone the repo
 ```bash
 https://github.com/abdulhaseebyousaf/Sticky-notes.git
-cd post-it-app
+
 
