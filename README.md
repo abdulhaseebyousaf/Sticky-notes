@@ -29,11 +29,12 @@ post-it-app/
 </html>
 ```
 
-## script.js
+ ```# script.js
 const addBoxBtn = document.getElementById('addBtn');
 const boxContainer = document.getElementById('boxContainer');
 const fullBody = document.getElementById('body');
 let draggedBox = null, offsetX, offsetY;
+let counter = 0;
 
 function saveNote(id, content, top, left) {
     const noteData = { content, top, left };
@@ -42,6 +43,9 @@ function saveNote(id, content, top, left) {
 
 function createBox(id, content = '', top = '60px', left = '50px') {
     const box = document.createElement('div');
+    const isMobile = window.innerWidth <= 640;
+    box.draggable = !isMobile;
+    box.style.position = isMobile ? 'static' : 'absolute';
     box.id = id;
     box.style.top = top;
     box.style.left = left;
@@ -106,7 +110,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 addBoxBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    const id = `box-${Date.now()}`;
+    const id = `box-${counter++}`;
     const randomTop = Math.floor(Math.random() * 300) + 50 + 'px';
     const randomLeft = Math.floor(Math.random() * 500) + 50 + 'px';
     createBox(id, '', randomTop, randomLeft);
@@ -126,6 +130,7 @@ fullBody.addEventListener('drop', (e) => {
     }
     draggedBox = null;
 });
+```
 
 // README.md
 ## Post-It Notes Web App
