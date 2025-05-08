@@ -43,9 +43,8 @@ function saveNote(id, content, top, left) {
 
 function createBox(id, content = '', top = '60px', left = '50px') {
     const box = document.createElement('div');
-    const isMobile = window.innerWidth <= 640;
-    box.draggable = !isMobile;
-    box.style.position = isMobile ? 'static' : 'absolute';
+    box.draggable = true;
+    box.style.position = 'absolute';
     box.id = id;
     box.style.top = top;
     box.style.left = left;
@@ -132,7 +131,7 @@ fullBody.addEventListener('drop', (e) => {
 });
 ```
 
-// README.md
+
 ## Post-It Notes Web App
 
 This is a simple sticky notes application built with plain JavaScript and TailwindCSS. Notes are draggable (on desktop), editable, and persist using localStorage.
