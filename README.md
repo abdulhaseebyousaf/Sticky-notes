@@ -1,8 +1,5 @@
 ## Folder structure:
 post-it-app/
-├── index.html
-├── script.js
-├── README.md
 
 ## index.html
 
@@ -34,7 +31,7 @@ const addBoxBtn = document.getElementById('addBtn');
 const boxContainer = document.getElementById('boxContainer');
 const fullBody = document.getElementById('body');
 let draggedBox = null, offsetX, offsetY;
-let counter = 0;
+
 
 function saveNote(id, content, top, left) {
     const noteData = { content, top, left };
@@ -44,11 +41,18 @@ function saveNote(id, content, top, left) {
 function createBox(id, content = '', top = '60px', left = '50px') {
     const box = document.createElement('div');
     box.draggable = true;
-    box.style.position = 'absolute';
     box.id = id;
+    box.style.margin = '10px';    
     box.style.top = top;
     box.style.left = left;
-    box.style.margin = '10px';
+
+    if (window.innerWidth <= 640) {
+        box.style.position = 'unset';
+    }
+    else {  
+        box.style.position = 'absolute';
+    }
+    
     box.classList.add('bg-white', 'shadow-lg', 'rounded-md', 'cursor-move', 'border', 'w-64', 'max-w-full', 'border-gray-300');
 
     const header = document.createElement('div');
@@ -101,7 +105,7 @@ function createBox(id, content = '', top = '60px', left = '50px') {
 window.addEventListener('DOMContentLoaded', () => {
     Object.keys(localStorage).forEach((key) => {
         if (key.startsWith('box-')) {
-            const { content, top, left } = JSON.parse(localStorage.getItem(key));
+            const { content, top, left} = JSON.parse(localStorage.getItem(key));
             createBox(key, content, top, left);
         }
     });
@@ -109,14 +113,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 addBoxBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    const id = `box-${counter++}`;
+    const id = `box-${Date.now()}`;
     const randomTop = Math.floor(Math.random() * 300) + 50 + 'px';
     const randomLeft = Math.floor(Math.random() * 500) + 50 + 'px';
     createBox(id, '', randomTop, randomLeft);
     saveNote(id, '', randomTop, randomLeft);
 });
 
-fullBody.addEventListener('dragover', (e) => e.preventDefault());
+fullBody.addEventListener('dragover', (e) =>  e.preventDefault());
 
 fullBody.addEventListener('drop', (e) => {
     if (draggedBox) {

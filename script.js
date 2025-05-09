@@ -2,7 +2,7 @@ const addBoxBtn = document.getElementById('addBtn');
 const boxContainer = document.getElementById('boxContainer');
 const fullBody = document.getElementById('body');
 let draggedBox = null, offsetX, offsetY;
-let counter = 0;
+
 
 function saveNote(id, content, top, left) {
     const noteData = { content, top, left };
@@ -76,7 +76,7 @@ function createBox(id, content = '', top = '60px', left = '50px') {
 window.addEventListener('DOMContentLoaded', () => {
     Object.keys(localStorage).forEach((key) => {
         if (key.startsWith('box-')) {
-            const { content, top, left } = JSON.parse(localStorage.getItem(key));
+            const { content, top, left} = JSON.parse(localStorage.getItem(key));
             createBox(key, content, top, left);
         }
     });
@@ -84,7 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 addBoxBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    const id = `box-${counter++}`;
+    const id = `box-${Date.now()}`;
     const randomTop = Math.floor(Math.random() * 300) + 50 + 'px';
     const randomLeft = Math.floor(Math.random() * 500) + 50 + 'px';
     createBox(id, '', randomTop, randomLeft);
