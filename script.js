@@ -91,7 +91,10 @@ addBoxBtn.addEventListener('click', (e) => {
     saveNote(id, '', randomTop, randomLeft);
 });
 
-fullBody.addEventListener('dragover', (e) =>  e.preventDefault());
+fullBody.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+ 
 
 fullBody.addEventListener('drop', (e) => {
     if (draggedBox) {

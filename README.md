@@ -13,14 +13,19 @@ post-it-app/
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="shortcut icon" href="/favicon/post-it.png" type="image/x-icon">
 </head>
-<body id="body" class="bg-slate-300 relative w-full min-h-screen flex flex-col">
-    <div class="text-4xl md:text-5xl font-semibold flex justify-center mt-3 bg-gradient-to-r from-stone-700 to-orange-500 text-transparent bg-clip-text">
-        Add notes
-    </div>
-    <button type="button" id="addBtn" class="flex px-4 md:px-6 text-white py-2 md:py-3 active:scale-[.98] active:bg-neutral-400 my-4 mx-auto cursor-pointer rounded-xl bg-gradient-to-r from-blue-500 to-green-500 ">
-        Add
-    </button>
-    <div id="boxContainer" class="pt-8 mx-4 md:mx-12  flex-grow"></div>
+<!-- main content -->
+<body id="body" class="bg-slate-300 min-h-screen overflow-scroll relative">
+    <!-- header -->
+        <header class="text-4xl md:text-5xl font-semibold text-center mt-3 bg-gradient-to-r from-stone-700 to-orange-500 text-transparent bg-clip-text">
+            Add notes
+        </header>
+        <!-- button -->
+        <button type="button" id="addBtn" class="flex px-4 md:px-6 text-white py-2 md:py-3 active:scale-[.98] active:bg-neutral-400 my-4 mx-auto cursor-pointer rounded-xl bg-gradient-to-r from-blue-500 to-green-500">
+            Add Note
+        </button>
+        <!-- box container -->
+        <div id="boxContainer" class="max-sm:grid max-sm:grid-cols-1 max-sm:justify-items-center grid-cols-6  "></div>
+    
     <script src="script.js"></script>
 </body>
 </html>
