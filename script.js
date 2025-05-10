@@ -4,10 +4,7 @@ const fullBody = document.getElementById('body');
 let draggedBox = null, offsetX, offsetY;
 
 
-function saveNote(id, content, top, left) {
-    const noteData = { content, top, left };
-    localStorage.setItem(id, JSON.stringify(noteData));
-}
+
 
 function createBox(id, content = '', top = '60px', left = '50px') {
     const box = document.createElement('div');
@@ -17,12 +14,8 @@ function createBox(id, content = '', top = '60px', left = '50px') {
     box.style.top = top;
     box.style.left = left;
 
-    if (window.innerWidth <= 640) {
-        box.style.position = 'unset';
-    }
-    else {  
-        box.style.position = 'absolute';
-    }
+ box.style.position = 'absolute';
+    
     
     box.classList.add('bg-white', 'shadow-lg', 'rounded-md', 'cursor-move', 'border', 'w-64', 'max-w-full', 'border-gray-300');
 
@@ -49,7 +42,12 @@ function createBox(id, content = '', top = '60px', left = '50px') {
     editButton.addEventListener('click', () => textArea.focus());
 
     saveButton.addEventListener('click', () => {
-        saveNote(box.id, textArea.value, box.style.top, box.style.left);
+    if (textArea.value === '') {
+        alert('Please write something in the note');
+        return;
+    }
+    const noteData = { content: textArea.value, top: box.style.top, left: box.style.left };
+    localStorage.setItem(id, JSON.stringify(noteData));
     });
 
     deleteButton.addEventListener('click', () => {
@@ -58,6 +56,7 @@ function createBox(id, content = '', top = '60px', left = '50px') {
             box.remove();
         }
     });
+    
 
     box.addEventListener('dragstart', (e) => {
         draggedBox = box;
