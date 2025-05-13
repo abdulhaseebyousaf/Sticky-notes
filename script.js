@@ -3,8 +3,12 @@ const boxContainer = document.getElementById('boxContainer');
 const fullBody = document.getElementById('body');
 let draggedBox = null, offsetX, offsetY;
 
-
-
+function saveNote(id, content, top, left) {
+    if (content.trim() === '') 
+        return;
+    const noteData = { content, top, left };
+    localStorage.setItem(id, JSON.stringify(noteData));
+}
 
 function createBox(id, content = '', top = '60px', left = '50px') {
     const box = document.createElement('div');
@@ -13,9 +17,7 @@ function createBox(id, content = '', top = '60px', left = '50px') {
     box.style.margin = '10px';    
     box.style.top = top;
     box.style.left = left;
-
- box.style.position = 'absolute';
-    
+    box.style.position = 'absolute';
     
     box.classList.add('bg-white', 'shadow-lg', 'rounded-md', 'cursor-move', 'border', 'w-64', 'max-w-full', 'border-gray-300');
 
@@ -46,8 +48,7 @@ function createBox(id, content = '', top = '60px', left = '50px') {
         alert('Please write something in the note');
         return;
     }
-    const noteData = { content: textArea.value, top: box.style.top, left: box.style.left };
-    localStorage.setItem(id, JSON.stringify(noteData));
+        saveNote(box.id, textArea.value, box.style.top, box.style.left);
     });
 
     deleteButton.addEventListener('click', () => {
@@ -58,10 +59,17 @@ function createBox(id, content = '', top = '60px', left = '50px') {
     });
     
 
+
     box.addEventListener('dragstart', (e) => {
         draggedBox = box;
         offsetX = e.offsetX;
         offsetY = e.offsetY;
+    });
+
+    box.addEventListener('dragend', () => {
+        if (textArea.value.trim() !== '') {
+            saveNote(box.id, textArea.value, box.style.top, box.style.left);
+        }
     });
 
     header.appendChild(editButton);
@@ -87,14 +95,12 @@ addBoxBtn.addEventListener('click', (e) => {
     const randomTop = Math.floor(Math.random() * 300) + 50 + 'px';
     const randomLeft = Math.floor(Math.random() * 500) + 50 + 'px';
     createBox(id, '', randomTop, randomLeft);
-    saveNote(id, '', randomTop, randomLeft);
 });
 
 fullBody.addEventListener('dragover', (e) => {
     e.preventDefault();
 });
  
-
 fullBody.addEventListener('drop', (e) => {
     if (draggedBox) {
         const left = e.clientX - offsetX + 'px';
