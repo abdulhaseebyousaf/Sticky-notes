@@ -7,144 +7,109 @@ post-it-app/
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post it</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="shortcut icon" href="/favicon/post-it.png" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post-it Notes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="shortcut icon" href="/favicon/post-it.png" type="image/x-icon">
 </head>
-<!-- main content -->
 <body id="body" class="bg-slate-300 min-h-screen overflow-scroll relative">
-    <!-- header -->
-        <header class="text-4xl md:text-5xl font-semibold text-center mt-3 bg-gradient-to-r from-stone-700 to-orange-500 text-transparent bg-clip-text">
-            Add notes
-        </header>
-        <!-- button -->
-        <button type="button" id="addBtn" class="flex px-4 md:px-6 text-white py-2 md:py-3 active:scale-[.98] active:bg-neutral-400 my-4 mx-auto cursor-pointer rounded-xl bg-gradient-to-r from-blue-500 to-green-500">
-            Add Note
-        </button>
-        <!-- box container -->
-        <div id="boxContainer" class="max-sm:grid max-sm:grid-cols-1 max-sm:justify-items-center grid-cols-6  "></div>
-    
-    <script src="script.js"></script>
+
+  <header class="text-4xl md:text-5xl font-semibold text-center mt-3 bg-gradient-to-r from-stone-700 to-orange-500 text-transparent bg-clip-text">
+    Add Notes
+  </header>
+
+  <button onclick="createBox()" class="flex px-6 py-3 my-4 mx-auto text-white rounded-xl bg-gradient-to-r from-blue-500 to-green-500 hover:opacity-90">
+    Add Note
+  </button>
+
+  <div id="boxContainer"></div>
+  
+  <script src="script.js"></script>
 </body>
 </html>
 ```
 
  ```# script.js
-const addBoxBtn = document.getElementById('addBtn');
 const boxContainer = document.getElementById('boxContainer');
 const fullBody = document.getElementById('body');
-let draggedBox = null, offsetX, offsetY;
+let draggedBox = null;
+let offsetX, offsetY;
 
-function saveNote(id, content, top, left) {
-    if (content.trim() === '') 
-        return;
-    const noteData = { content, top, left };
-    localStorage.setItem(id, JSON.stringify(noteData));
-}
-
-function createBox(id, content = '', top = '60px', left = '50px') {
-    const box = document.createElement('div');
-    box.draggable = true;
-    box.id = id;
-    box.style.margin = '10px';    
-    box.style.top = top;
-    box.style.left = left;
-    box.style.position = 'absolute';
-    
-    box.classList.add('bg-white', 'shadow-lg', 'rounded-md', 'cursor-move', 'border', 'w-64', 'max-w-full', 'border-gray-300');
-
-    const header = document.createElement('div');
-    header.classList.add('flex', 'justify-between', 'items-center', 'p-2', 'bg-gray-100', 'border-b', 'border-gray-300', 'rounded-t-md');
-
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
-    editButton.classList.add('text-red-500', 'cursor-pointer', 'hover:text-red-700', 'font-semibold');
-
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Save';
-    saveButton.classList.add('text-red-500', 'cursor-pointer', 'hover:text-red-700', 'font-semibold');
-
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.classList.add('text-red-500', 'cursor-pointer', 'hover:text-red-700', 'font-semibold');
-
-    const textArea = document.createElement('textarea');
-    textArea.classList.add('note-content', 'w-full', 'h-28', 'p-2', 'resize-none', 'focus:outline-none');
-    textArea.value = content;
-    textArea.placeholder = 'Write your note here...';
-
-    editButton.addEventListener('click', () => textArea.focus());
-
-    saveButton.addEventListener('click', () => {
-    if (textArea.value === '') {
-        alert('Please write something in the note');
-        return;
+function createBox(id, content = '', top, left) {
+const newBox = document.createElement("div");
+newBox.className = "box bg-white shadow-lg rounded-md border border-gray-300 w-64 max-w-full  absolute cursor-move";
+newBox.draggable = true;
+// Set random position if top/left are not provided
+newBox.style.top = top || (Math.floor(Math.random() * 300) + 50 + 'px');
+newBox.style.left = left || (Math.floor(Math.random() * 500) + 50 + 'px');
+  newBox.id = id || `box-${Date.now()}`;
+  newBox.innerHTML = `
+    <div class="flex justify-between items-center p-2 bg-gray-100 border-b border-gray-300 rounded-t-md">
+      <button class="text-red-500 hover:text-red-700 font-semibold edit-btn">Edit</button>
+      <button class="text-red-500 hover:text-red-700 font-semibold save-btn">Save</button>
+      <button class="text-red-500 hover:text-red-700 font-semibold delete-btn">Delete</button>
+    </div>
+    <textarea class="note-content w-full h-28 p-2 resize-none focus:outline-none" placeholder="Write your note here...">${content}</textarea>
+  `;
+  // Button functionality
+  const textArea = newBox.querySelector('textarea');
+  newBox.querySelector('.edit-btn').onclick = () => {
+    textArea.focus();
+  };
+  newBox.querySelector('.save-btn').onclick = () => {
+    if (textArea.value.trim() === '') {
+      alert('Please write something in the note');
+      return;
     }
-        saveNote(box.id, textArea.value, box.style.top, box.style.left);
-    });
-
-    deleteButton.addEventListener('click', () => {
-        if (confirm('Are you sure you want to delete this note?')) {
-            localStorage.removeItem(box.id);
-            box.remove();
-        }
-    });
-    
-
-
-    box.addEventListener('dragstart', (e) => {
-        draggedBox = box;
-        offsetX = e.offsetX;
-        offsetY = e.offsetY;
-    });
-
-    box.addEventListener('dragend', () => {
-        if (textArea.value.trim() !== '') {
-            saveNote(box.id, textArea.value, box.style.top, box.style.left);
-        }
-    });
-
-    header.appendChild(editButton);
-    header.appendChild(saveButton);
-    header.appendChild(deleteButton);
-    box.appendChild(header);
-    box.appendChild(textArea);
-    boxContainer.appendChild(box);
+    saveNote(newBox.id, textArea.value, newBox.style.top, newBox.style.left);
+  };
+  newBox.querySelector('.delete-btn').onclick = () => {
+    if (confirm('Are you sure you want to delete this note?')) {
+      localStorage.removeItem(newBox.id);
+      newBox.remove();
+    }
+  };
+  // Drag functionality
+  newBox.addEventListener('dragstart', (e) => {
+    draggedBox = newBox;
+    offsetX = e.offsetX;
+    offsetY = e.offsetY;
+  });
+  newBox.addEventListener('dragend', () => {
+    if (textArea.value.trim() !== '') {
+      saveNote(newBox.id, textArea.value, newBox.style.top, newBox.style.left);
+    }
+  });
+  boxContainer.appendChild(newBox);
 }
-
+function saveNote(id, content, top, left) {
+  localStorage.setItem(id, JSON.stringify({ content, top, left }));
+}
+// Load notes from localStorage
 window.addEventListener('DOMContentLoaded', () => {
-    Object.keys(localStorage).forEach((key) => {
-        if (key.startsWith('box-')) {
-            const { content, top, left} = JSON.parse(localStorage.getItem(key));
-            createBox(key, content, top, left);
-        }
-    });
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith('box-')) {
+      const { content, top, left } = JSON.parse(localStorage.getItem(key));
+      createBox(key, content, top, left);
+    }
+  });
 });
-
-addBoxBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const id = `box-${Date.now()}`;
-    const randomTop = Math.floor(Math.random() * 300) + 50 + 'px';
-    const randomLeft = Math.floor(Math.random() * 500) + 50 + 'px';
-    createBox(id, '', randomTop, randomLeft);
-});
-
-fullBody.addEventListener('dragover', (e) => {
-    e.preventDefault();
-});
- 
+// Handle dropping of notes
+fullBody.addEventListener('dragover', (e) => e.preventDefault());
 fullBody.addEventListener('drop', (e) => {
-    if (draggedBox) {
-        const left = e.clientX - offsetX + 'px';
-        const top = e.clientY - offsetY + 'px';
-        draggedBox.style.left = left;
-        draggedBox.style.top = top;
-        const ta = draggedBox.querySelector('textarea');
-        saveNote(draggedBox.id, ta.value, top, left);
+  if (draggedBox) {
+    const left = e.clientX - offsetX + 'px';
+    const top = e.clientY - offsetY + 'px';
+    draggedBox.style.left = left;
+    draggedBox.style.top = top;
+
+    const textArea = draggedBox.querySelector('textarea');
+    if (textArea.value.trim() !== '') {
+      saveNote(draggedBox.id, textArea.value, top, left);
     }
     draggedBox = null;
+  }
 });
 ```
 
